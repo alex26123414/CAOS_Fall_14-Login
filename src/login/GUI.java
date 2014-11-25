@@ -7,7 +7,10 @@ package login;
 
 import datalayer.UserDB;
 import java.awt.Color;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.swing.JOptionPane;
+import javax.swing.text.BadLocationException;
 import model.User;
 
 /**
@@ -42,6 +45,7 @@ public class GUI extends javax.swing.JFrame {
         welcomeLabel = new javax.swing.JLabel();
         jFormattedTextField1 = new javax.swing.JFormattedTextField();
         jFormattedTextField2 = new javax.swing.JFormattedTextField();
+        userTextField = new javax.swing.JTextField();
         menuBar = new javax.swing.JMenuBar();
         fileMenu = new javax.swing.JMenu();
         openMenuItem = new javax.swing.JMenuItem();
@@ -145,6 +149,13 @@ public class GUI extends javax.swing.JFrame {
         }
         jFormattedTextField2.setFont(new java.awt.Font("Tahoma", 0, 24)); // NOI18N
 
+        userTextField.setFont(new java.awt.Font("Tahoma", 0, 24)); // NOI18N
+        userTextField.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyReleased(java.awt.event.KeyEvent evt) {
+                userTextFieldKeyReleased(evt);
+            }
+        });
+
         fileMenu.setMnemonic('f');
         fileMenu.setText("File");
 
@@ -220,7 +231,8 @@ public class GUI extends javax.swing.JFrame {
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                             .addComponent(jFormattedTextField1, javax.swing.GroupLayout.DEFAULT_SIZE, 184, Short.MAX_VALUE)
-                            .addComponent(jFormattedTextField2))
+                            .addComponent(jFormattedTextField2)
+                            .addComponent(userTextField))
                         .addGap(0, 111, Short.MAX_VALUE))
                     .addComponent(jPanel2, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                 .addContainerGap())
@@ -238,6 +250,8 @@ public class GUI extends javax.swing.JFrame {
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(jFormattedTextField2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(userTextField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jPanel2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
@@ -254,15 +268,29 @@ public class GUI extends javax.swing.JFrame {
         String email = emailTextField.getText();
         String pass = new String(passPasswordField.getPassword());
         User u = UserDB.getUserFromDB(email, pass);
-        if(u != null){
+        if (u != null) {
             welcomeLabel.setText("Welcome " + u.getEmail());
             jPanel1.setVisible(false);
-        } else{
+        } else {
             welcomeLabel.setText("You are an IDIOT!");
             welcomeLabel.setForeground(Color.red);
         }
         //JOptionPane.showMessageDialog(null, "email: "+email+"\npass: "+ pass);
     }//GEN-LAST:event_jButton1ActionPerformed
+
+    private void userTextFieldKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_userTextFieldKeyReleased
+        try {
+            String input = userTextField.getText(0, 1);
+            if (userTextField.getText().length()>1) {
+                if (!input.matches("[a-zA-Z]+\\.?")) {
+                    JOptionPane.showMessageDialog(null, "Your username can only start with a letter");
+                }
+            }
+        } catch (BadLocationException ex) {
+            Logger.getLogger(GUI.class.getName()).log(Level.SEVERE, null, ex);
+        }
+
+    }//GEN-LAST:event_userTextFieldKeyReleased
 
     /**
      * @param args the command line arguments
@@ -323,6 +351,7 @@ public class GUI extends javax.swing.JFrame {
     private javax.swing.JMenuItem pasteMenuItem;
     private javax.swing.JMenuItem saveAsMenuItem;
     private javax.swing.JMenuItem saveMenuItem;
+    private javax.swing.JTextField userTextField;
     private javax.swing.JLabel welcomeLabel;
     // End of variables declaration//GEN-END:variables
 
